@@ -1,0 +1,452 @@
+<html>
+    <head>
+       <meta name="viewport" content="width=device-width, user-scalable=yes, minimum-scale=1.0, maximum-scale=1.0" />
+       <title>Ethereal - Posters</title>
+
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/ethereal.js"></script>
+        <!--script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.11.6/TweenMax.min.js"></script-->
+        <script src="scripts/TweenMax.min.js"></script>
+
+        <style>
+
+            /*.circular {
+                border-radius: 50%;
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                opacity: 0
+            }*/
+
+            .info {
+                font-size: 0.6em;
+                border-radius: 4px;
+                background-color: rgba(256,256,256,0.8);
+                font-family: Matterhorn, Helvetica, sans-serif;
+                padding: 5px;
+            }
+
+            .info p {
+                color: #5a5f62;
+                padding: 0;
+                margin: 0;
+            }
+
+            .info h3 {
+                font-weight: 600;
+                color: #111;
+                padding: 0;
+                margin: 0;
+            }
+
+        </style>
+
+        <script>
+
+            // Ethereal.debug = true;
+
+            var posterWidth = 600
+
+            var ratatouillePoster = new Ethereal.ImageSurface("ratatouille/poster_scaled.png")
+            ratatouillePoster.width = posterWidth
+
+
+            var ratatouilleLogo = new Ethereal.ImageSurface("ratatouille/logo.png")
+            ratatouilleLogo.width = posterWidth * 0.55
+            ratatouilleLogo.position.z = 10
+
+            ratatouilleLogo.originalTransform = new THREE.Object3D()
+            ratatouilleLogo.originalTransform.position.y = -posterWidth * 0.5
+            ratatouilleLogo.originalTransform.position.z = 10
+            ratatouilleLogo.originalTransform.add(ratatouilleLogo)
+            ratatouillePoster.background.add(ratatouilleLogo.originalTransform)
+
+            ratatouilleLogo.zoomTransform = new THREE.Object3D()
+            ratatouilleLogo.zoomTransform.position.z = 20
+            ratatouilleLogo.zoomTransform.scale.set(2,2,1)
+            ratatouillePoster.add(ratatouilleLogo.zoomTransform)
+
+            var ratatouilleKnives = new Ethereal.ImageSurface("ratatouille/knives_scaled.png")
+            ratatouilleKnives.width = posterWidth
+            ratatouilleKnives.position.z = 10
+            ratatouillePoster.background.add(ratatouilleKnives)
+
+
+            var characters = []
+
+            var createCharacter = function(imagePath) {
+                var character = new Ethereal.ImageSurface(imagePath)
+                // character.element.classList.add("circular")
+                // character.element.style.borderRadius = "50%"
+                // character.background.element.style.borderRadius = "50%"
+                character.element.style.border = "3px solid #eb2"
+                character.element.style.opacity = 0
+                character.width = posterWidth / 4
+                character.position.z = 1
+
+                character.showTransform = new THREE.Object3D()
+                character.hideTransform = new THREE.Object3D()
+                ratatouillePoster.background.add(character.showTransform)
+                ratatouillePoster.background.add(character.hideTransform)
+
+
+                character.hideTransform.position.set(0,-posterWidth*0.5,0)
+                character.hideTransform.add(character)
+
+                characters.push(character)
+
+                character.info = new Ethereal.Surface()
+                character.info.width = posterWidth / 4
+                character.info.element.classList.add("info")
+                character.info.position.z = -4
+
+                character.info.showTransform = new THREE.Object3D()
+                character.info.hideTransform = new THREE.Object3D()
+                character.add(character.info.showTransform)
+                character.add(character.info.hideTransform)
+                character.info.hideTransform.add(character.info)
+
+                return character
+            }
+
+            var infoOffset = posterWidth * 0.25
+
+            var ratatouilleLinguini = createCharacter("ratatouille/linguini.jpg")
+            ratatouilleLinguini.showTransform.position.set(posterWidth*0.45,posterWidth*0.55,0)
+            ratatouilleLinguini.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleLinguini.info.showTransform.position.x = infoOffset
+            ratatouilleLinguini.info.element.innerHTML = '<h3 class="title">Linguini</h3><p class="desc">Linguini, a timid and well-meaning young man, is the new garbage boy at Gasteau\'s.</p>'
+
+
+            var ratatouilleEgo = createCharacter("ratatouille/ego.jpg")
+            ratatouilleEgo.showTransform.position.set(-posterWidth*0.44,-posterWidth*0.1,0)
+            ratatouilleEgo.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleEgo.info.showTransform.position.x = -infoOffset
+            ratatouilleEgo.info.element.innerHTML = '<h3 class="title">Anton Ego</h3><p class="desc">Ego is an imperious and acerbic food critic, whose reviews can make or break a restaurant.</p>'
+
+            var ratatouilleTatou = createCharacter("ratatouille/tatou.jpg")
+            ratatouilleTatou.showTransform.position.set(posterWidth*0.48,posterWidth*0.24,0)
+            ratatouilleTatou.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleTatou.info.showTransform.position.x = infoOffset
+            ratatouilleTatou.info.element.innerHTML = '<h3 class="title">Colette Tatou</h3><p class="desc">Colette is the only female cook in Chef Skinner\'s kitchen. She is a capable cook, hard working and very tough.</p>'
+
+
+            var ratatouilleRemy = createCharacter("ratatouille/remy.jpg")
+            ratatouilleRemy.showTransform.position.set(-posterWidth*0.45,posterWidth*0.55,0)
+            ratatouilleRemy.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleRemy.info.showTransform.position.x = -infoOffset
+            ratatouilleRemy.info.element.innerHTML = '<h3 class="title">Remy</h3><p class="desc">Rats are no strangers to rejection, but Remy, a rat who longs to be a great chef, has more than the usual obstacles to overcome.</p>'
+
+
+            var ratatouilleSkinner = createCharacter("ratatouille/skinner.jpg")
+            ratatouilleSkinner.showTransform.position.set(posterWidth*0.45,-posterWidth*0.08,0)
+            ratatouilleSkinner.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleSkinner.info.showTransform.position.x = infoOffset
+            ratatouilleSkinner.info.element.innerHTML = '<h3 class="title">Skinner</h3><p class="desc">He is head chef of the famous restaurant Gusteau\'s. He was sous-chef under Gusteau but became the head chef.</p>'
+
+
+
+            var ratatouilleEmile = createCharacter("ratatouille/emile.jpg")
+            ratatouilleEmile.showTransform.position.set(-posterWidth*0.47,posterWidth*0.2,0)
+            ratatouilleEmile.hideTransform.scale.set(0.1,0.1,1)
+            ratatouilleEmile.info.showTransform.position.x = -infoOffset
+            ratatouilleEmile.info.element.innerHTML = '<h3 class="title">Emile</h3><p class="desc">He is a brown (probably like his mother\'s fur color), overweight rat, and is slightly larger than his younger brother.</p>'
+
+
+            var ratatouilleBreakpointGroup = new Ethereal.BreakpointGroup([
+                {
+                    // BreakpointRange
+                    metric: ratatouillePoster.metrics.widthLOD,
+                    map: [0, "thin", 0.5, "thick", 0.8, "full", 1],
+                    threshold: 0.01
+                },
+                {
+                    // BreakpointRange
+                    metric: ratatouillePoster.metrics.heightLOD,
+                    map: [0, "thin", 0.5, "thick", 0.8, "full", 1],
+                    threshold: 0.01
+                },
+                {
+                    // BreakpointRange
+                    metric: ratatouillePoster.metrics.areaLOD,
+                    map: ["small", 0.6, "medium", 0.9, "large"],
+                    threshold: 0.01
+                }
+            ])
+
+            ratatouilleBreakpointGroup.onEnter = function(width, height, area) {
+
+                var api = this
+
+                function lessPoster() {
+
+                    api.onUpdate(function() {
+                        var scaleX = Math.min( 2.05 * 1/ratatouillePoster.metrics.widthLOD(), 2.7)
+                        var scaleY = 2.05
+                        var t = Ethereal.deltaTime * 3
+                        ratatouillePoster.background.scale.lerp( new THREE.Vector3(scaleX,scaleY,1), t )
+                        // ratatouillePoster.background.transformOrigin.lerp( new THREE.Vector2(0.5,0.43), t )
+                    })
+                }
+
+                function morePoster() {
+
+                    api.onUpdate(function() {
+                        var t = Ethereal.deltaTime * 3
+                        ratatouillePoster.background.scale.lerp( new THREE.Vector3(1,1,1), t )
+                        // ratatouillePoster.background.transformOrigin.lerp( new THREE.Vector2(0.5,0.5), t )
+                    })
+                }
+
+                function showCharacters() {
+
+                    TweenLite.to(ratatouillePoster, 1, {
+                        ethereal: {
+                            style: { opacity: 0 }
+                        }
+                    })
+
+                    characters.forEach(function(character) {
+                        TweenLite.to(character, 1.5 + Math.random()*0.8, {
+                            ethereal: {
+                                parent: character.showTransform,
+                                style: { opacity: 1 }
+                            }, ease: Elastic.easeOut
+                        })
+
+                        character.background.scale.set(1.5,1.5,1)
+
+                        api.onUpdate(function() {
+
+                            var paralaxX = character.metrics.relativeDirection().azimuth /
+                                90 * character.metrics.width() || 0
+                            var paralaxY = character.metrics.relativeDirection().elevation /
+                                90 * character.metrics.height() || 0
+
+                            character.background.position.x = paralaxX * 0.35
+                            character.background.position.y = paralaxY * 0.35
+
+                            character.position.x = paralaxX * 0.15
+                            character.position.y = paralaxY * 0.15
+
+                        })
+
+                    })
+                }
+
+                function hideCharacters() {
+
+                    TweenLite.to(ratatouillePoster, 1, {
+                        ethereal: {
+                            style: { opacity: 1 }
+                        }
+                    })
+
+                    characters.forEach(function(character) {
+                        TweenLite.to(character, 0.8 + Math.random()*0.3, {
+                            ethereal: {
+                                parent: character.hideTransform,
+                                style: { opacity: 0 }
+                            }, //ease: Elastic.easeOut
+                        })
+                    })
+                }
+
+
+                if (area.is.small) {
+
+                    TweenLite.to(ratatouilleLogo, 1.5, {
+                        ethereal: {
+                            parent: ratatouilleLogo.zoomTransform
+                        }
+                    })
+
+
+
+                } else {
+
+                    TweenLite.to(ratatouilleLogo, 0.5, {
+                        ethereal: {
+                            parent: ratatouilleLogo.originalTransform
+                        }
+                    })
+
+                }
+
+
+                if (area.is.small && (width.is.thick || width.is.full)) {
+                    lessPoster()
+                } else {
+                    morePoster()
+                }
+
+                if (area.is.large) {
+                    showCharacters()
+                } else {
+                    hideCharacters()
+                }
+
+                this.onUpdate(function() {
+
+                    var q = new THREE.Quaternion()
+                    var t = Ethereal.deltaTime * 4
+                    var azimuth = ratatouillePoster.metrics.relativeDirection().azimuth
+
+                    if (Math.abs(azimuth) > 60) {
+                        ratatouilleLogo.quaternion.slerp( q.setFromEuler(new THREE.Euler(0,azimuth* Math.PI/180 ,0)), t )
+                        ratatouilleLogo.position.lerp( new THREE.Vector3(0,0,150), t )
+                    } else {
+                        ratatouilleLogo.quaternion.slerp( q.setFromEuler(new THREE.Euler(0,0,0)), t )
+                        ratatouilleLogo.position.lerp( new THREE.Vector3(0,0,0), t )
+                    }
+                })
+
+            }
+
+
+            characters.forEach(function(character) {
+
+                var characterBPGruop = new Ethereal.BreakpointGroup([
+                    {
+                        // BreakpointRange
+                        metric: character.metrics.areaLOD,
+                        map: ["small", 0.2, "big"],
+                        threshold: 0.2
+                    },
+                    {
+                        // BreakpointRange
+                        metric: character.metrics.screenDistanceFromCenter,
+                        map: ["center", 0.5, "edge"],
+                        threshold: 0.01,
+                        hysteresis: 0.2
+                    },
+                    {
+                        // BreakpointRange
+                        metric: character.info.metrics.screenDistanceFromCenter,
+                        map: ["center", 0.5, "edge"],
+                        threshold: 0.01,
+                        hysteresis: 0.2
+                    }
+                ])
+
+                characterBPGruop.onEnter = function(area, screenDistance, infoScreenDistance) {
+
+                    if ( screenDistance.is.center && infoScreenDistance.is.center && area.is.big ) {
+
+                        TweenLite.to(character.info, 1, {
+                            ethereal: {
+                                parent: character.info.showTransform,
+                                style: { opacity: 1 }
+                            }, ease: Elastic.easeOut
+                        })
+
+                        var grow = new THREE.Vector3(1.2,1.2,1)
+                        this.onUpdate(function() {
+                            character.scale.lerp(grow, Ethereal.deltaTime * 10 )
+                        })
+
+                    } else if (screenDistance.is.edge && infoScreenDistance.is.edge) {
+                        TweenLite.to(character.info, 1, {
+                            ethereal: {
+                                parent: character.info.hideTransform,
+                                style: { opacity: 0 }
+                            }, ease: Elastic.easeOut
+                        })
+
+                        var shrink = new THREE.Vector3(1,1,1)
+                        this.onUpdate(function() {
+                            character.scale.lerp(shrink, Ethereal.deltaTime * 10 )
+                        })
+                    }
+
+                }
+
+
+            })
+
+
+
+
+            var ratatouilleSummary = new Ethereal.Surface()
+            ratatouilleSummary.width = posterWidth / 2.2
+            ratatouilleSummary.transformOrigin.y = 0
+            ratatouilleSummary.element.classList.add("info")
+            ratatouilleSummary.hideTransform = new THREE.Object3D()
+            ratatouilleSummary.hideTransform.position.z = -15
+            ratatouilleSummary.hideTransform.scale.set(0.001,0.001,1)
+            ratatouilleSummary.showTransform = new THREE.Object3D()
+            ratatouilleSummary.showTransform.position.z = 15
+            ratatouillePoster.add(ratatouilleSummary.hideTransform)
+            ratatouillePoster.add(ratatouilleSummary.showTransform)
+            ratatouilleSummary.hideTransform.add(ratatouilleSummary)
+            ratatouilleSummary.element.innerHTML = '<h3 class="title">Ratatouille</h3><p class="desc">Ratatouille is an Academy Award and Golden Globe-winning computer-animated film produced by Pixar Animation Studios and released by Walt Disney Pictures and Buena Vista Distribution. It tells the story of Remy (voiced by Patton Oswalt), a rat living in Paris who wants to be a chef. The film was the eighth movie produced by Pixar, and was written and directed by Brad Bird, who took over from Jan Pinkava in 2005, and it was released on June 29, 2007 in the United States and on October 12, 2007 in the United Kingdom, to both critical acclaims and box office success. It was the last Disney/Pixar film to use the Pixar exclusive Walt Disney Pictures logo.</p>'
+
+
+
+            var summaryBPGroup = new Ethereal.BreakpointGroup([
+                {
+                    // BreakpointRange
+                    metric: ratatouillePoster.metrics.areaLOD,
+                    map: ["small", 1, "medium", 1.5, "big"],
+                    threshold: 0.1
+                },
+                {
+                    // BreakpointRange
+                    metric: ratatouillePoster.metrics.screenDistanceFromCenter,
+                    map: ["center", 0.5, "edge"],
+                    threshold: 0.01
+                },
+                {
+                    // BreakpointRange
+                    metric: ratatouilleSummary.metrics.widthLOD,
+                    map: [0, "thin", 0.4, "thick", 0.7, "full", 1],
+                    threshold: 0.01
+                }
+            ])
+
+            summaryBPGroup.onEnter = function(area, screenDistance, summaryWidth) {
+
+                if ( area.is.big && screenDistance.is.center ) {
+                    TweenLite.to( ratatouilleSummary, 0.5, {
+                        ethereal: {
+                            parent:  ratatouilleSummary.showTransform,
+                            // style: { opacity: 1 }
+                        }, ease: Elastic.easeOut
+                    })
+                } else if ( area.is.small ) {
+                    TweenLite.to( ratatouilleSummary, 0.5, {
+                        ethereal: {
+                            parent:  ratatouilleSummary.hideTransform,
+                            // style: { opacity: 0 }
+                        }, ease: Elastic.easeOut
+                    })
+                }
+
+
+                TweenLite.to(ratatouilleSummary, 0.3, {ethereal: { modifier: function() {
+                    Ethereal.SurfaceModifiers.elasticDensity(ratatouilleSummary, summaryWidth.zoneCenter, 1)
+                } }} )
+
+            }
+
+
+            var ratatouilleContent = new THREE.Object3D()
+            ARGON.World.add(ratatouilleContent)
+            ratatouilleContent.add(ratatouillePoster)
+            ratatouilleContent.add(ratatouilleLogo)
+
+            ARGON.loadDataset("datasets/Posters.xml", function(dataset) {
+
+                // alert('loaded dataset')
+                // var stonesTarget = new ARGON.TrackedObject( dataset.targets.stones )
+                // var chipsTarget = new ARGON.TrackedObject( dataset.targets.chips )
+                var ratatouilleTarget = new ARGON.TrackedObject( dataset.targets.Ratatouille )
+
+                ratatouilleTarget.add(ratatouilleContent)
+            })
+
+        </script>
+    </head>
+
+    <body>
+    </body>
+</html>

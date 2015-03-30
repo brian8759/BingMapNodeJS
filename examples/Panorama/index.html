@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<title>Geo</title>
+
+<script src="../../vendor/three.js"></script>
+<script src="../../vendor/threestrap.js"></script>
+<script src="../../vendor/argon/argon.js"></script>
+<script src="../../vendor/argon/argon-three.js"></script>
+
+<body></body>
+
+<script>
+
+  var panoramaBackground = new ARGON.Background.Panorama({
+    source: {equirectangular: 'pano2.jpg'}
+  })
+
+  ARGON.immersiveContext.setBackgroundPreference( panoramaBackground )
+
+</script>

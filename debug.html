@@ -1,0 +1,28 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<title>Debug</title>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- <script src="../../vendor/three.js"></script> -->
+<!-- <script src="../../vendor/threestrap.js"></script> -->
+<script src="../../vendor/argon/argon.js"></script>
+<!-- <script src="../../vendor/argon/argon-three.js"></script> -->
+
+<body></body>
+
+<script>
+
+var socket = io()
+
+ARGON.managerPort._eventOutput.pipe(function(type, event) {
+  socket.emit('fromRemoteChannelManager', {type:type, event:event})
+})
+
+socket.on('toRemoteChannelManager', function(data) {
+  if (data.type !== 'unload') // ignore unload events
+    ARGON.managerPort.trigger(data.type, data.event)
+})
+
+</script>
